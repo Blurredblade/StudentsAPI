@@ -10,7 +10,7 @@ namespace StudentsAPI.Models
 {
     public class DataLayer
     {
-        List<Student> students = new List<Student>();
+        private List<Student> _students = new List<Student>();
         string path = @"StudentData.csv";
         public void LoadFile()
         {
@@ -18,16 +18,16 @@ namespace StudentsAPI.Models
             for(int i = 0; i < lines.Length; i++)
             {
                 string[] value = lines[i].Split(",");
-                students.Add(new Student { Id = value[0], Name = value[1], Gpa = float.Parse(value[2]) });
+                _students.Add(new Student { Id = value[0], Name = value[1], Gpa = float.Parse(value[2]) });
 
             }
         }
 
-        public void WriteFile()
+        public void SaveChanges()
         {
-            string[] write = new string[students.Count];
+            string[] write = new string[_students.Count];
             int count = 0;
-            foreach (Student student in students)
+            foreach (Student student in _students)
             {
                 write[count] = student.ToString();
                 count++;
@@ -37,33 +37,30 @@ namespace StudentsAPI.Models
 
         public List<Student> GetStudents()
         {
-            return students;
+            return _students;
         }
 
         public Student GetStudentByID(string id)
         {
-            foreach(Student student in students)
-            {
-                if(student.Id == id)
-                {
-                    return student;
-                }
-            }
-
-            return null;
+            return _students.Find(s => s.Id == id);
         }
 
         public void CreateStudent(Student student)
         {
-            students.Add(new Student { Id = student.Id, Name = student.Name, Gpa = student.Gpa });
+            _students.Add(new Student { Id = student.Id, Name = student.Name, Gpa = student.Gpa });
+        }
+
+        public void Delete(Student student)
+        {
+            _students.Remove(student);
         }
 
         public float[] Range()
         {
             float[] range = new float[]
 {
-                students.Min(g => g.Gpa),
-                students.Max(g => g.Gpa)
+                _students.Min(g => g.Gpa),
+                _students.Max(g => g.Gpa)
             };
             return range;
         }

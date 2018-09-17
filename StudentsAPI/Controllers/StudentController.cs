@@ -59,42 +59,22 @@ namespace StudentsAPI.Controllers
         public IActionResult Create(Student student)
         {
             _data.CreateStudent(student);
-            _data.WriteFile();
+            _data.SaveChanges();
 
             return CreatedAtRoute("GetStudent", new { id = student.Id }, student);
         }
-
-        /* This method wasn't specified in the req
-        [HttpPut("{id}")]
-        public IActionResult Update(long id, Student student)
-        {
-            var stu = _context.Students.Find(id);
-            if(stu == null)
-            {
-                return NotFound();
-            }
-
-            stu.Id = student.Id;
-            stu.Name = student.Name;
-            stu.Gpa = student.Gpa;
-
-            _context.Students.Update(stu);
-            _context.SaveChanges();
-            return NoContent();
-        }
-        */
-
+       
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
-            var stu = _context.Students.Find(id);
-            if(stu == null)
+            var student = _data.GetStudentByID(id);
+            if(student == null)
             {
                 return NotFound();
             }
 
-            _context.Students.Remove(stu);
-            _context.SaveChanges();
+            _data.Delete(student);
+            _data.SaveChanges();
             return NoContent();
         }
     }
