@@ -9,53 +9,38 @@ using StudentsAPI.Models;
 
 namespace StudentsAPI.Controllers
 {
-    [Route("api/student")]
+    [Route("api/[controller]")]
     [ApiController]
     public class StudentController : Controller
     {
         private readonly StudentContext _context;
+        private DataLayer _data;
 
         public StudentController(StudentContext context)
         {
+             _data = new DataLayer();
+            _data.LoadFile();
             _context = context;
-/*
-            if (_context.Students.Count() == 0)
-            {
-                // Create a new Student if collection is empty,
-                // which means you can't delete all Students.
-                _context.Students.Add(new Student { Name = "Test Student" });
-                _context.SaveChanges();
-            }
-            */
+            /*
+                        if (_context.Students.Count() == 0)
+                        {
+                            // Create a new Student if collection is empty,
+                            // which means you can't delete all Students.
+                            _context.Students.Add(new Student { Name = "Test Student" });
+                            _context.SaveChanges();
+                        }
+                        */
         }
 
         [HttpGet]
         public ActionResult<List<Student>> GetAll()
         {
-            return _context.Students.ToList();
+            return _data.GetStudents();
         }
 
-        [HttpGet("{id}", Name = "GetStudent")]
-        public ActionResult<Student> GetById(long id)
-        {
-            var student = _context.Students.Find(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            return student;
-        }
-
-        [HttpGet("/range")]
+        [HttpGet("/range", Name = "GetRange")]
         public ActionResult<float[]> Get()
         {
-            /*
-            List<float> range = new List<float>();
-            range.Add(_context.Students.Min(g => g.Gpa));
-            range.Add(_context.Students.Max(g => g.Gpa));
-            return range;
-            */
-
             float[] range = new float[]
             {
                 _context.Students.Min(g => g.Gpa),
@@ -63,12 +48,23 @@ namespace StudentsAPI.Controllers
             };
             return range;
         }
-
+       
+        [HttpGet("{id}", Name = "GetStudent")]
+        public ActionResult<Student> GetById(string id)
+        {
+            var student = _data.GetStudentByID(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            return student;
+        }
+        
         [HttpPost]
         public IActionResult Create(Student student)
         {
-            _context.Students.Add(student);
-            _context.SaveChanges();
+            _data.CreateStudent(student);
+            _data.WriteFile();
 
             return CreatedAtRoute("GetStudent", new { id = student.Id }, student);
         }
