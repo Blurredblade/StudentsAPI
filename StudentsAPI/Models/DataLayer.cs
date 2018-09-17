@@ -4,6 +4,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace StudentsAPI.Models
 {
@@ -29,6 +30,7 @@ namespace StudentsAPI.Models
             foreach (Student student in students)
             {
                 write[count] = student.ToString();
+                count++;
             }
             File.WriteAllLines(path, write);
         }
@@ -54,6 +56,16 @@ namespace StudentsAPI.Models
         public void CreateStudent(Student student)
         {
             students.Add(new Student { Id = student.Id, Name = student.Name, Gpa = student.Gpa });
+        }
+
+        public float[] Range()
+        {
+            float[] range = new float[]
+{
+                students.Min(g => g.Gpa),
+                students.Max(g => g.Gpa)
+            };
+            return range;
         }
     }
 }

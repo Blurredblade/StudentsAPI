@@ -9,7 +9,7 @@ using StudentsAPI.Models;
 
 namespace StudentsAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/student")]
     [ApiController]
     public class StudentController : Controller
     {
@@ -38,15 +38,10 @@ namespace StudentsAPI.Controllers
             return _data.GetStudents();
         }
 
-        [HttpGet("/range", Name = "GetRange")]
+        [HttpGet("range", Name = "GetRange")]
         public ActionResult<float[]> Get()
         {
-            float[] range = new float[]
-            {
-                _context.Students.Min(g => g.Gpa),
-                _context.Students.Max(g => g.Gpa)
-            };
-            return range;
+            return _data.Range();
         }
        
         [HttpGet("{id}", Name = "GetStudent")]
