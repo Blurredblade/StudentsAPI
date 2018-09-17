@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using StudentsAPI.Models;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace StudentsAPI.Controllers
 {
@@ -13,23 +8,12 @@ namespace StudentsAPI.Controllers
     [ApiController]
     public class StudentController : Controller
     {
-        private readonly StudentContext _context;
         private DataLayer _data;
 
-        public StudentController(StudentContext context)
+        public StudentController()
         {
-             _data = new DataLayer();
+            _data = new DataLayer();
             _data.LoadFile();
-            _context = context;
-            /*
-                        if (_context.Students.Count() == 0)
-                        {
-                            // Create a new Student if collection is empty,
-                            // which means you can't delete all Students.
-                            _context.Students.Add(new Student { Name = "Test Student" });
-                            _context.SaveChanges();
-                        }
-                        */
         }
 
         [HttpGet]
