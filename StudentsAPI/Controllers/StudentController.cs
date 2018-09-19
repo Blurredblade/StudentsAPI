@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿//Zachary Cobb and Trent Bradburry
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using StudentsAPI.Models;
 
