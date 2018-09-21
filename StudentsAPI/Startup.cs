@@ -18,7 +18,7 @@ namespace StudentsAPI
     
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<StudentContext>(opt => opt.UseInMemoryDatabase("Student"));
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
