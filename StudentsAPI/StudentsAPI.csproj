@@ -15,10 +15,4 @@
     <PackageReference Include="MySql.Data" Version="8.0.12" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="StudentData.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
