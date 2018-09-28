@@ -9,14 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="StudentData.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <PackageReference Include="MySql.Data" Version="8.0.12" />
   </ItemGroup>
 
 </Project>

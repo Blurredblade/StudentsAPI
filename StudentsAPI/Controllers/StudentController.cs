@@ -9,30 +9,29 @@ namespace StudentsAPI.Controllers
     [ApiController]
     public class StudentController : Controller
     {
-        private DataLayer _data;
+        private QueryManager _qm;
 
         public StudentController()
         {
-            _data = new DataLayer();
-            _data.LoadFile();
+            _qm = new QueryManager();
         }
 
         [HttpGet]
         public ActionResult<List<Student>> GetAll()
         {
-            return _data.GetStudents();
+            return _qm.GetStudents();
         }
 
         [HttpGet("range", Name = "GetRange")]
         public ActionResult<float[]> Get()
         {
-            return _data.Range();
+            return _qm.Range();
         }
        
         [HttpGet("{id}", Name = "GetStudent")]
         public ActionResult<Student> GetById(string id)
         {
-            var student = _data.GetStudentByID(id);
+            var student = _qm.GetStudentByID(id);
             if (student == null)
             {
                 return NotFound();
@@ -43,23 +42,21 @@ namespace StudentsAPI.Controllers
         [HttpPost]
         public IActionResult Create(Student student)
         {
-            _data.CreateStudent(student);
-            _data.SaveChanges();
+            _qm.CreateStudent(student);
 
-            return CreatedAtRoute("GetStudent", new { id = student.Id }, student);
+            return CreatedAtRoute("GetStudent", new { id = student.Student_Id }, student);
         }
        
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            var student = _data.GetStudentByID(id);
+            var student = _qm.GetStudentByID(id);
             if(student == null)
             {
                 return NotFound();
             }
 
-            _data.Delete(student);
-            _data.SaveChanges();
+            _qm.Delete(id);
             return NoContent();
         }
     }
