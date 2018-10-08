@@ -164,14 +164,15 @@ namespace StudentsAPI.Models
                             invoiceEntry = invoice;
                             invoiceEntry.LineItems = new List<LineItem>();
                             invoiceDictionary.Add(invoiceEntry.Inv_Number, invoiceEntry);
+                            customerEntry.Invoices.Add(invoiceEntry);
                         }
 
                         invoiceEntry.LineItems.Add(lineItem);
-                        customerEntry.Invoices.Add(invoiceEntry);
+                        
 
                         return customerEntry;
                     },
-                    splitOn: "Inv_Number,Line_Number").Distinct().ToList();
+                    splitOn: "Inv_Number,Inv_Number").Distinct().ToList();
 
 
             }
