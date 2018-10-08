@@ -98,7 +98,7 @@ namespace StudentsAPI.Models
             return range;
         }
 
-        public List<Invoice> listInvoice()
+        public List<Invoice> ListInvoice()
         {
             string credentials = "Server=localhost;Database=inclasstest;UID=ZCobb;Password=J`@$Kyx]2F^cpF`W";
 
@@ -115,14 +115,14 @@ namespace StudentsAPI.Models
                     {
                         Invoice invoiceEntry;
 
-                        if (!invoiceDictionary.TryGetValue(invoice.inv_Num, out invoiceEntry))
+                        if (!invoiceDictionary.TryGetValue(invoice.Inv_Number, out invoiceEntry))
                         {
                             invoiceEntry = invoice;
-                            invoiceEntry.lineItems = new List<LineItem>();
-                            invoiceDictionary.Add(invoiceEntry.inv_Num, invoiceEntry);
+                            invoiceEntry.LineItems = new List<LineItem>();
+                            invoiceDictionary.Add(invoiceEntry.Inv_Number, invoiceEntry);
                         }
 
-                        invoiceEntry.lineItems.Add(lineItem);
+                        invoiceEntry.LineItems.Add(lineItem);
                         return invoiceEntry;
                     }, 
                     splitOn: "Line_Number").Distinct().ToList();
@@ -131,6 +131,53 @@ namespace StudentsAPI.Models
             }
 
             return invoiceList;
+        }
+
+        public List<Customer> ListCustomers()
+        {
+            string credentials = "Server=localhost;Database=inclasstest;UID=ZCobb;Password=J`@$Kyx]2F^cpF`W";
+
+            string sql = "SELECT * FROM customer AS A INNER JOIN invoice AS B ON A.CUS_CODE = B.CUS_CODE INNER JOIN line AS C ON B.INV_NUMBER = C.INV_NUMBER;";
+
+            List<Customer> customerList = new List<Customer>();
+
+            using (var con = new MySqlConnection(credentials))
+            {
+                Dictionary<int, Invoice> invoiceDictionary = new Dictionary<int, Invoice>();
+                Dictionary<int, Customer> customerDictionary = new Dictionary<int, Customer>();
+
+                customerList = con.Query<Customer, Invoice, LineItem, Customer>(sql,
+                    (customer, invoice, lineItem) =>
+                    {
+                        Customer customerEntry;
+                        Invoice invoiceEntry;
+                        
+                        if (!customerDictionary.TryGetValue(customer.Cus_Code, out customerEntry))
+                        {
+                            customerEntry = customer;
+                            customer.Invoices = new List<Invoice>();
+                            customerDictionary.Add(customer.Cus_Code, customer);
+                        }
+
+                        if (!invoiceDictionary.TryGetValue(invoice.Inv_Number, out invoiceEntry))
+                        {
+                            invoiceEntry = invoice;
+                            invoiceEntry.LineItems = new List<LineItem>();
+                            invoiceDictionary.Add(invoiceEntry.Inv_Number, invoiceEntry);
+                        }
+
+                        invoiceEntry.LineItems.Add(lineItem);
+                        customerEntry.Invoices.Add(invoiceEntry);
+
+                        return customerEntry;
+                    },
+                    splitOn: "Inv_Number,Line_Number").Distinct().ToList();
+
+
+            }
+
+            return customerList;
+
         }
 
     }

@@ -63,7 +63,13 @@ namespace StudentsAPI.Controllers
         [HttpGet("inv")]
         public ActionResult<List<Invoice>> getInvoices()
         {
-            return _qm.listInvoice();
+            return _qm.ListInvoice();
+        }
+
+        [HttpGet("cusInv")]
+        public ActionResult<List<Customer>> getCustomers()
+        {
+            return _qm.ListCustomers();
         }
     }
 }

@@ -7,8 +7,8 @@ namespace StudentsAPI.Models
 {
     public class Invoice
     {
-        public int inv_Num { get; set; }
-        public string inv_Date { get; set; }
-        public List<LineItem> lineItems { get; set; }
+        public int Inv_Number { get; set; }
+        public string Inv_Date { get; set; }
+        public List<LineItem> LineItems { get; set; }
     }
 }
