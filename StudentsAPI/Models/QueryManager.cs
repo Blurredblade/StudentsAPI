@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 using Dapper;
 
@@ -11,7 +9,7 @@ namespace StudentsAPI.Models
 {
     public class QueryManager
     {
-        private const String _dbCredentials = "Server=localhost;Database=studentdb;UID=ZCobb;Password=J`@$Kyx]2F^cpF`W";
+        private const string _dbCredentials = "Server=localhost;Database=studentdb;UID=ZCobb;Password=J`@$Kyx]2F^cpF`W";
 
         //Returns the List of all students
         public List<Student> GetStudents()
@@ -98,6 +96,41 @@ namespace StudentsAPI.Models
                 
             }
             return range;
+        }
+
+        public List<Invoice> listInvoice()
+        {
+            string credentials = "Server=localhost;Database=inclasstest;UID=ZCobb;Password=J`@$Kyx]2F^cpF`W";
+
+            string sql = "SELECT * FROM invoice AS A INNER JOIN line AS B ON A.INV_NUMBER = B.INV_NUMBER;";
+
+            List<Invoice> invoiceList = new List<Invoice>();
+
+            using (var con = new MySqlConnection(credentials))
+            {
+                Dictionary<int, Invoice> invoiceDictionary = new Dictionary<int, Invoice>();
+                
+                invoiceList = con.Query<Invoice, LineItem, Invoice>(sql,
+                    (invoice, lineItem) =>
+                    {
+                        Invoice invoiceEntry;
+
+                        if (!invoiceDictionary.TryGetValue(invoice.inv_Num, out invoiceEntry))
+                        {
+                            invoiceEntry = invoice;
+                            invoiceEntry.lineItems = new List<LineItem>();
+                            invoiceDictionary.Add(invoiceEntry.inv_Num, invoiceEntry);
+                        }
+
+                        invoiceEntry.lineItems.Add(lineItem);
+                        return invoiceEntry;
+                    }, 
+                    splitOn: "Line_Number").Distinct().ToList();
+                    
+                
+            }
+
+            return invoiceList;
         }
 
     }

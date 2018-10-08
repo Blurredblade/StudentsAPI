@@ -59,5 +59,11 @@ namespace StudentsAPI.Controllers
             _qm.Delete(id);
             return NoContent();
         }
+
+        [HttpGet("inv")]
+        public ActionResult<List<Invoice>> getInvoices()
+        {
+            return _qm.listInvoice();
+        }
     }
 }

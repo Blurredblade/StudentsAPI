@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace StudentsAPI.Models
+{
+    public class LineItem
+    {
+        public float Line_Units { get; set; }
+        public string P_Code { get; set; }
+        public float Line_Price { get; set; }
+    }
+}
